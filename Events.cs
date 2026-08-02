@@ -25,6 +25,11 @@ namespace AnnounceLogPlugin
                 return;
             }
 
+            if (!Plugin.Instance.Config.ShowPlayerJoinNotification)
+            {
+                return;
+            }
+
             Plugin.Instance.BroadcastAnnounceLog(string.Format(Plugin.Instance.Translation.HasJoinedTheGame,
             ev.Player.Nickname));
         }
@@ -38,8 +43,12 @@ namespace AnnounceLogPlugin
 
             Timing.KillCoroutines(Plugin.Instance.playerAnnounceLogInfos[ev.Player].UpdateTextCoroutineHandle);
             Plugin.Instance.playerAnnounceLogInfos.Remove(ev.Player);
-            Plugin.Instance.BroadcastAnnounceLog(string.Format(Plugin.Instance.Translation.HasLeftTheGame,
-            ev.Player.Nickname));
+
+            if (Plugin.Instance.Config.ShowPlayerLeaveNotification)
+            {
+                Plugin.Instance.BroadcastAnnounceLog(string.Format(Plugin.Instance.Translation.HasLeftTheGame,
+ev.Player.Nickname));
+            }
         }
 
         public void OnRestartingRound()
@@ -50,6 +59,11 @@ namespace AnnounceLogPlugin
         public void OnInfluenceModified(Faction faction, float newValue)
         {
             if (Plugin.Instance == null)
+            {
+                return;
+            }
+
+            if (!Plugin.Instance.Config.ShowInfluenceIncreasedNotification)
             {
                 return;
             }
@@ -67,6 +81,11 @@ namespace AnnounceLogPlugin
         public void OnDying(Exiled.Events.EventArgs.Player.DyingEventArgs ev)
         {
             if (Plugin.Instance == null)
+            {
+                return;
+            }
+
+            if (!Plugin.Instance.Config.ShowKillNotification)
             {
                 return;
             }
@@ -153,6 +172,11 @@ namespace AnnounceLogPlugin
         public void OnEscaping(Exiled.Events.EventArgs.Player.EscapingEventArgs ev)
         {
             if (Plugin.Instance == null)
+            {
+                return;
+            }
+
+            if (!Plugin.Instance.Config.ShowEscortNotification)
             {
                 return;
             }

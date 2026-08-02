@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ExMod.Exiled" Version="9.14.2" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="libs\Assembly-CSharp-firstpass.dll" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="libs\UnityEngine.CoreModule.dll" />
+    <Reference Include="RueI" HintPath="libs\RueI.dll" />
+    <PackageReference Include="Unity3D.UnityEngine" Version="2018.3.5.1" />
+  </ItemGroup>
+
+</Project>

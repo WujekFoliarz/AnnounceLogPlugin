@@ -1,5 +1,6 @@
 using PlayerRoles;
 using MEC;
+using Exiled.Loader;
 
 namespace AnnounceLogPlugin
 {
@@ -41,13 +42,12 @@ namespace AnnounceLogPlugin
                 return;
             }
 
-            Timing.KillCoroutines(Plugin.Instance.playerAnnounceLogInfos[ev.Player].UpdateTextCoroutineHandle);
-            Plugin.Instance.playerAnnounceLogInfos.Remove(ev.Player);
+            Plugin.Instance.RemovePlayerCoroutine(ev.Player);
 
             if (Plugin.Instance.Config.ShowPlayerLeaveNotification)
             {
                 Plugin.Instance.BroadcastAnnounceLog(string.Format(Plugin.Instance.Translation.HasLeftTheGame,
-ev.Player.Nickname));
+                ev.Player.Nickname));
             }
         }
 
@@ -91,6 +91,11 @@ ev.Player.Nickname));
             }
 
             if (ev.Attacker == null)
+            {
+                return;
+            }
+
+            if (ev.Player == ev.Attacker)
             {
                 return;
             }

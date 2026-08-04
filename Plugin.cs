@@ -4,14 +4,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Features;
-    using Exiled.API.Interfaces;
     using Respawning;
     using RueI.API;
     using RueI.API.Elements;
     using MEC;
     using System.Text;
     using RueI.Utils;
-    using PlayerRoles;
+    using Exiled.Loader;
 
     public class Plugin : Plugin<Config, Translation>
     {
@@ -19,7 +18,7 @@
 
         public override string Name => "AnnounceLogPlugin";
         public override string Author => "Wujek_Foliarz";
-        public override Version Version => new Version(1, 0, 0);
+        public override Version Version => new Version(1, 0, 1);
 
         private Events? Events { get; set; }
 
@@ -75,6 +74,8 @@
             Exiled.Events.Handlers.Player.Verified -= Events.OnVerified;
             Exiled.Events.Handlers.Player.Escaping -= Events.OnEscaping;
             Events = null;
+
+            RemoveAllPlayersCouroutine();
         }
 
         public Func<string> GetPlayerCurrentAnnounceLog(Player player)
@@ -88,7 +89,7 @@
 
                 foreach (var entry in info.AnnounceLogQueue)
                 {
-                    sb.SetHorizontalPos(-350);
+                    sb.SetHorizontalPos(-330);
                     sb.Append(entry.Text.Substring(0, Math.Min(entry.Index, entry.Text.Length)) + "<br>");
                 }
 
@@ -108,15 +109,33 @@
             }
         }
 
-        public void SendAnnounceLog(Player player, string LogText)
+        public void SendAnnounceLog(Player Player, string LogText)
         {
-            if (playerAnnounceLogInfos.TryGetValue(player, out PlayerAnnounceLogInfo info))
+            if (playerAnnounceLogInfos.TryGetValue(Player, out PlayerAnnounceLogInfo info))
             {
                 info.AnnounceLogQueue.Add(new AnnounceLogEntry(LogText));
             }
             else
             {
-                Log.Error($"[SendAnnounceLog] Couldn't find {player.Nickname}");
+                Log.Error($"[SendAnnounceLog] Couldn't find {Player.Nickname}");
+            }
+        }
+
+        public void RemovePlayerCoroutine(Player Player)
+        {
+            if (playerAnnounceLogInfos.TryGetValue(Player, out PlayerAnnounceLogInfo info))
+            {
+                Timing.KillCoroutines(info.UpdateTextCoroutineHandle);
+                playerAnnounceLogInfos.Remove(Player);
+            }
+        }
+
+        public void RemoveAllPlayersCouroutine()
+        {
+            foreach (var info in playerAnnounceLogInfos)
+            {
+                Timing.KillCoroutines(info.Value.UpdateTextCoroutineHandle);
+                playerAnnounceLogInfos.Remove(info.Key);
             }
         }
 

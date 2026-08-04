@@ -6,7 +6,8 @@ namespace AnnounceLogPlugin
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;
-        public int ExtendedTextIndex { get; set; } = 30;
+        public int ExtendedTextIndex { get; set; } = 70;
+        public string Language { get; set; } = "en";
         public bool ShowInfluenceIncreasedNotification { get; set; } = true;
         public bool ShowKillNotification { get; set; } = true;
         public bool ShowEscortNotification { get; set; } = true;

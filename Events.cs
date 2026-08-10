@@ -149,6 +149,11 @@ namespace AnnounceLogPlugin
                 timerDecrease = 10;
                 influenceEarned = 15;
             }
+            else if (ev.Player.IsScp && ev.Player.Role == RoleTypeId.Scp0492)
+            {
+                timerDecrease = 5;
+                influenceEarned = 0;
+            }
 
             string forWhoInfluence = "";
             if ((Utils.IsPlayerOnFoundationSide(ev.Player) || ev.Player.IsScp) && Utils.IsPlayerOnCISide(ev.Attacker))

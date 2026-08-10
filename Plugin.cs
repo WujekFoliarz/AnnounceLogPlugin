@@ -18,7 +18,7 @@
 
         public override string Name => "AnnounceLogPlugin";
         public override string Author => "Wujek_Foliarz";
-        public override Version Version => new Version(1, 0, 1);
+        public override Version Version => new Version(1, 0, 2);
 
         private Events? Events { get; set; }
 

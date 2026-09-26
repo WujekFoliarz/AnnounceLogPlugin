@@ -75,14 +75,16 @@
             Exiled.Events.Handlers.Player.Escaping -= Events.OnEscaping;
             Events = null;
 
-            RemoveAllPlayersCouroutine();
+            RemoveAllPlayersCoroutine();
         }
 
         public Func<string> GetPlayerCurrentAnnounceLog(Player player)
         {
             return () =>
             {
-                var info = playerAnnounceLogInfos[player];
+                if (!playerAnnounceLogInfos.TryGetValue(player, out var info))
+                    return string.Empty;
+
                 StringBuilder sb = new StringBuilder();
                 sb.SetAlignment(RueI.Utils.Enums.AlignStyle.Left);
                 sb.SetSize(28);
@@ -90,7 +92,12 @@
                 foreach (var entry in info.AnnounceLogQueue)
                 {
                     sb.SetHorizontalPos(-330);
-                    sb.Append(entry.Text.Substring(0, Math.Min(entry.Index, entry.Text.Length)) + "<br>");
+                    sb.Append(
+                        entry.Text.Substring(
+                            0,
+                            Math.Min(entry.Index, entry.Text.Length)
+                        ) + "<br>"
+                    );
                 }
 
                 sb.CloseAlign();
@@ -99,6 +106,7 @@
                 return sb.ToString();
             };
         }
+
 
         public void BroadcastAnnounceLog(string LogText)
         {
@@ -130,13 +138,14 @@
             }
         }
 
-        public void RemoveAllPlayersCouroutine()
+        public void RemoveAllPlayersCoroutine()
         {
-            foreach (var info in playerAnnounceLogInfos)
+            foreach (var info in playerAnnounceLogInfos.Values)
             {
-                Timing.KillCoroutines(info.Value.UpdateTextCoroutineHandle);
-                playerAnnounceLogInfos.Remove(info.Key);
+                Timing.KillCoroutines(info.UpdateTextCoroutineHandle);
             }
+
+            playerAnnounceLogInfos.Clear();
         }
 
         public IEnumerator<float> DisplayLoop(PlayerAnnounceLogInfo info)

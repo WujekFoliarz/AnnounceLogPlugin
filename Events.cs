@@ -44,7 +44,7 @@ namespace AnnounceLogPlugin
 
             Plugin.Instance.RemovePlayerCoroutine(ev.Player);
 
-            if (Plugin.Instance.Config.ShowPlayerLeaveNotification)
+            if (Plugin.Instance.Config.ShowPlayerLeaveNotification && ev.Player.Nickname != "")
             {
                 Plugin.Instance.BroadcastAnnounceLog(string.Format(Plugin.Instance.Translation.HasLeftTheGame,
                 ev.Player.Nickname));

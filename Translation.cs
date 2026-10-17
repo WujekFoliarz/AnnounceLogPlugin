@@ -49,5 +49,9 @@ namespace AnnounceLogPlugin
         public string FoundationInfluenceIncreased { get; set; } = "Foundation's influence increased";
         public string CIInfluenceIncreased { get; set; } = "Chaos Insurgency's influence increased";
         public string Escorted { get; set; } = "Escorted";
+        public string ShowLogs { get; set; } = "Show logs";
+        public string ShowLogsDescription { get; set; } = "Show logs displayed on the left side of the screen";
+        public string Yes { get; set; } = "Yes";
+        public string No { get; set; } = "No";
     }
 }

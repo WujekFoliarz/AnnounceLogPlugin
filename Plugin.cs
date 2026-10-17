@@ -11,6 +11,7 @@
     using System.Text;
     using RueI.Utils;
     using Exiled.Loader;
+    using Exiled.API.Features.Core.UserSettings;
 
     public class Plugin : Plugin<Config, Translation>
     {
@@ -19,6 +20,7 @@
         public override string Name => "AnnounceLogPlugin";
         public override string Author => "Wujek_Foliarz";
         public override Version Version => new Version(1, 0, 2);
+        public HeaderSetting SettingsHeader { get; set; } = new HeaderSetting(2175, "Announce Log");
 
         private Events? Events { get; set; }
 
@@ -48,6 +50,9 @@
         {
             Instance = this;
             Events = new();
+
+            if (Config.EnableServerSettings) SettingBase.Register(new[] { SettingsHeader });
+            if (Config.EnableServerSettings) ServerSettings.RegisterSettings();
             FactionInfluenceManager.InfluenceModified += Events.OnInfluenceModified;
             Exiled.Events.Handlers.Server.RestartingRound += Events.OnRestartingRound;
             Exiled.Events.Handlers.Player.Joined += Events.OnJoined;
@@ -60,6 +65,9 @@
         public override void OnDisabled()
         {
             Instance = null;
+
+            if (Config.EnableServerSettings) SettingBase.Unregister(settings: new[] { SettingsHeader });
+            if (Config.EnableServerSettings) ServerSettings.UnregisterSettings();
 
             if (Events == null)
             {
@@ -113,12 +121,20 @@
             foreach (var pair in playerAnnounceLogInfos)
             {
                 PlayerAnnounceLogInfo info = pair.Value;
-                info.AnnounceLogQueue.Add(new AnnounceLogEntry(LogText));
+                if (info.player is not null && ServerSettings.ShouldShowLogs(info.player))
+                {
+                    info.AnnounceLogQueue.Add(new AnnounceLogEntry(LogText));
+                }
             }
         }
 
         public void SendAnnounceLog(Player Player, string LogText)
         {
+            if (Player is null || !ServerSettings.ShouldShowLogs(Player))
+            {
+                return;
+            }
+
             if (playerAnnounceLogInfos.TryGetValue(Player, out PlayerAnnounceLogInfo info))
             {
                 info.AnnounceLogQueue.Add(new AnnounceLogEntry(LogText));

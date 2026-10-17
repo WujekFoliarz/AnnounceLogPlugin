@@ -19,7 +19,7 @@
 
         public override string Name => "AnnounceLogPlugin";
         public override string Author => "Wujek_Foliarz";
-        public override Version Version => new Version(1, 0, 2);
+        public override Version Version => new Version(1, 0, 3);
         public HeaderSetting SettingsHeader { get; set; } = new HeaderSetting(2175, "Announce Log");
 
         private Events? Events { get; set; }
